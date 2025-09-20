@@ -3,13 +3,13 @@
     <!-- Section 1: Crime Statistics Overview -->
     <div class="row mb-4">
       <h2 class="mb-3">Crime Statistics Overview</h2>
-      <div class="col-12 col-md-5">
+      <div class="col-12 col-md-4">
         <div class="card bg-transparent border border-light text-white">
           <div class="card-body">
             <h4 class="card-title">Reports Overview</h4>
             <div class="chart-container text-center">
               <div class="pie-chart">
-                <Pie :data="chartData" :options="chartOptions" :width="200" :height="100" />
+                <Pie :data="chartData" :options="chartOptions" :width="150" :height="75" />
               </div>
             </div>
           </div>
