@@ -378,15 +378,15 @@ export default {
       this.currentMedia = null; // Close the media viewer
     },
     getApiBase() {
-      const isNgrok = location.hostname.includes("ngrok");
+      const isNgrok = location.hostname.includes("servern");
       return isNgrok
-        ? `http://${location.hostname}`
-        : "http://localhost:3000";
+        ? `https://${location.hostname}`
+        : "https://servern.loophole.site";
     },
 
     async fetchUserIdentity() {
       try {
-        const response = await axios.get('http://localhost:3000/get-identity-session', {
+        const response = await axios.get('https://servern.loophole.site/get-identity-session', {
           withCredentials: true,
         });
 
