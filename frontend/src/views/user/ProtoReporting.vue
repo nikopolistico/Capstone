@@ -273,7 +273,7 @@ export default {
       });
 
       // Send the files to the server
-      axios.post('https://servern.loophole.site/upload', formData, {
+      axios.post('https://a46bf9efcb8f.ngrok-free.app/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => {
@@ -293,7 +293,7 @@ export default {
       const fileName = this.uploadedFileNames[index];
 
       // Send a request to delete the file from the server
-      axios.delete(`https://servern.loophole.site/delete-file/${fileName}`)
+      axios.delete(`https://a46bf9efcb8f.ngrok-free.app/delete-file/${fileName}`)
         .then(() => {
           // Remove the preview URL and file name from the arrays
           this.previewUrls.splice(index, 1);
@@ -334,7 +334,7 @@ export default {
       this.uploadStatus = 'Uploading...';
 
       // Send the form data to the server
-      axios.post('https://servern.loophole.site/report', formData, {
+      axios.post('https://a46bf9efcb8f.ngrok-free.app/report', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then(() => {
@@ -354,7 +354,7 @@ export default {
 
     async fetchUserIdentity() {
       try {
-        const response = await axios.get("https://servern.loophole.site/get-identity-session", { withCredentials: true });
+        const response = await axios.get("https://a46bf9efcb8f.ngrok-free.app/get-identity-session", { withCredentials: true });
         this.userIdentity = response.data.userIdentity || 'Mahay';
         console.log("Fetched user identity:", this.userIdentity);
         if (this.userIdentity) {
@@ -372,7 +372,7 @@ export default {
       }
 
       try {
-        const response = await axios.get(`https://servern.loophole.site/reports?userIdentity=${userIdentity}`, {
+        const response = await axios.get(`https://a46bf9efcb8f.ngrok-free.app/reports?userIdentity=${userIdentity}`, {
           withCredentials: true,
         });
         this.reports = response.data || [];
