@@ -273,7 +273,7 @@ export default {
       });
 
       // Send the files to the server
-      axios.post('https://a46bf9efcb8f.ngrok-free.app/upload', formData, {
+      axios.post('https://cca5e943b333.ngrok-free.app/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => {
@@ -354,7 +354,7 @@ export default {
 
     async fetchUserIdentity() {
       try {
-        const response = await axios.get("https://a46bf9efcb8f.ngrok-free.app/get-identity-session", { withCredentials: true });
+        const response = await axios.get("https://cca5e943b333.ngrok-free.app/get-identity-session", { withCredentials: true });
         this.userIdentity = response.data.userIdentity || 'Mahay';
         console.log("Fetched user identity:", this.userIdentity);
         if (this.userIdentity) {
@@ -372,7 +372,7 @@ export default {
       }
 
       try {
-        const response = await axios.get(`https://a46bf9efcb8f.ngrok-free.app/reports?userIdentity=${userIdentity}`, {
+        const response = await axios.get(`https://cca5e943b333.ngrok-free.app/reports?userIdentity=${userIdentity}`, {
           withCredentials: true,
         });
         this.reports = response.data || [];
