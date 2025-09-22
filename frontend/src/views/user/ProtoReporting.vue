@@ -293,7 +293,7 @@ export default {
       const fileName = this.uploadedFileNames[index];
 
       // Send a request to delete the file from the server
-      axios.delete(`https://servern.loophole/delete-file/${fileName}`)
+      axios.delete(`https://servern.loophole.site/delete-file/${fileName}`)
         .then(() => {
           // Remove the preview URL and file name from the arrays
           this.previewUrls.splice(index, 1);
@@ -354,7 +354,7 @@ export default {
 
     async fetchUserIdentity() {
       try {
-        const response = await axios.get("https://servern.loophole/get-identity-session", { withCredentials: true });
+        const response = await axios.get("https://servern.loophole.site/get-identity-session", { withCredentials: true });
         this.userIdentity = response.data.userIdentity || '';
         console.log("Fetched user identity:", this.userIdentity);
         if (this.userIdentity) {
