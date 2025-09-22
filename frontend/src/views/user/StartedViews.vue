@@ -122,7 +122,7 @@ export default {
         this.connectionStatus = "Connecting...";
         this.statusColor = "black";
 
-        const response = await fetch("https://servern.loophole.site/connect", {
+        const response = await fetch("https://a46bf9efcb8f.ngrok-free.app/connect", {
           method: "POST",
           credentials: "include",
           headers: {
