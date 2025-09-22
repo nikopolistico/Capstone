@@ -1,9 +1,9 @@
 <template>
-  <div class="container mt-5 bg-dark text-light p-4 rounded">
+  <div class="container-fluid bg-dark text-light p-4 rounded">
     <div class="row">
       <!-- Left Column: Register New Tanod -->
       <div class="col-md-6 mb-4">
-        <div class="card bg-secondary text-light border-0 rounded-2 shadow-lg">
+        <div class="card bg-transparent text-light rounded-3 shadow-lg p-3 mb-5">
           <div class="card-header bg-dark">
             <h2>👮 Register New Tanod</h2>
           </div>
@@ -44,13 +44,13 @@
 
       <!-- Right Column: List of Registered Tanods -->
       <div class="col-md-6">
-        <div class="card bg-secondary text-light border-0 rounded-1 shadow-lg">
+        <div class="card bg-transparent text-light border-0 rounded-1 shadow-lg">
           <div class="card-header bg-dark">
             <h2>List of Registered Tanods</h2>
           </div>
           <div class="card-body">
             <!-- Table to display registered tanods -->
-            <table class="table table-bordered table-striped text-light">
+            <table class="table table-bordered table-dark text-light">
               <thead class="bg-dark">
                 <tr>
                   <th>Tanod ID</th>

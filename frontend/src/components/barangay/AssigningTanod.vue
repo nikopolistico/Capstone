@@ -3,7 +3,7 @@
     <div class="row">
       <!-- Left Column: Reports -->
       <div class="col-md-6">
-        <div class="card bg-secondary text-light border-0 rounded">
+        <div class="card bg-transparent text-light shadow p-3 mb-5 rounded-3">
           <div class="card-header bg-dark text-light">
             <h3>📋 View Reports</h3>
           </div>
@@ -13,7 +13,7 @@
               v-for="(report, index) in reports"
               :key="index"
             >
-              <div class="card mb-3">
+              <div class="card bg-transparent shadow p-3 text-light rounded-3 mb-3">
                 <div class="card-header">
                   Feature
                 </div>
@@ -25,7 +25,7 @@
                   </p>
                   <p class="card-text mb-2">
                     <label>Status: </label>
-                    <span class="text-danger fw-bold"> {{ report.status }}</span>
+                    <span class="text-danger fw-bold p-2">{{ report.status }}</span>
                   </p>
 
                   <div>
@@ -33,7 +33,7 @@
                     <div
                       v-if="!isAssigned(report.crimeId)"
                       class="d-flex align-items-center"
-                      style="border:3px solid #007bff; background:#e3f0ff; padding:16px; border-radius:8px; margin:8px 0; z-index:1000; position:relative;"
+                      style="border:3px solid #007bff; background:transparent; padding:16px; border-radius:8px; margin:8px 0; z-index:1000; position:relative;"
                     >
                       <label for="tanod-select" class="me-2">Assign Tanod: </label>
                       <select
@@ -57,8 +57,8 @@
                     <div v-else class="card-footer text-muted assigned-info">
                       <div v-for="(assignment, index) in assignments" :key="index">
                         <div v-if="assignment.crime_id == report.crimeId">
-                          <p class="mb-1"><span class="text-success">Assigned to: </span>{{ assignment.assigned_to }}</p>
-                          <p class="mb-0">Assigned at: {{ assignment.assigned_at }}</p>
+                          <p class="mb-1 text-white"><span class="text-success">Assigned to: </span>{{ assignment.assigned_to }}</p>
+                          <p class="mb-0 text-white"><span class="text-success">Assigned at: </span>{{ assignment.assigned_at }}</p>
                         </div>
                       </div>
                     </div>
@@ -72,11 +72,11 @@
 
       <!-- Right Column: Tanods -->
       <div class="col-md-6">
-        <div class="card bg-secondary text-light border-0 rounded">
+        <div class="card bg-transparent text-light rounded shadow p-3 mb-5">
           <div class="card-header bg-dark text-light">
             <h3>👮 Assigned Report Count</h3>
           </div>
-          <table v-if="tanods.length" class="table table-bordered table-striped text-light">
+          <table v-if="tanods.length" class="table table-bordered table-dark text-light">
             <thead class="bg-dark">
               <tr>
                 <th>Username</th>
@@ -102,7 +102,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 import { reactive } from 'vue';

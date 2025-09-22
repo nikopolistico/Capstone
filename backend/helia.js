@@ -2,7 +2,8 @@ import { createHelia } from "helia";
 import { dagJson } from "@helia/dag-json";
 import fs from "fs";
 import { CID } from "multiformats/cid";
-
+import dotenv from "dotenv";
+dotenv.config();
 // Initialize Helia and DAG-JSON
 const helia = await createHelia();
 const d = dagJson(helia);
@@ -50,7 +51,7 @@ async function retrieveMetadata(cidStr, outputFilePath) {
 // Example of how to use these functions
 
 // 1. Upload files and get their CIDs
-/*const filePaths = [
+const filePaths = [
   "/home/nikohackto/FinalCapstone/backend/image2.jpg",
   "/home/nikohackto/FinalCapstone/backend/image3.jpg",
 ];
@@ -59,6 +60,6 @@ console.log("All file links (CIDs):", fileLinks);
 
 // 2. Retrieve metadata for a specific file (e.g., the second file)
 const cidToRetrieve = fileLinks[1]; // Example: Retrieve the second file's metadata
-await retrieveMetadata(cidToRetrieve, "retrievedFile.jpg");*/
-
+console.log("Retrieving metadata for CID:", cidToRetrieve);
+//baguqeerazfonhovtkqkqaynmguvjq75dgy732mywhmu4ew2t2av226s4fupa
 export { uploadFiles, retrieveMetadata };

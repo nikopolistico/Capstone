@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="container-fluid d-flex">
     <!-- Sidebar -->
     <aside id="sidebar" class="bg-dark text-light p-3 d-flex flex-column" style="width: 250px; height: 100vh;">
       <h1 class="text-center text-primary mb-4 fs-4">Admin Dashboard</h1>
@@ -60,6 +60,39 @@
   </div>
 </template>
 
+<style scoped>
+/* Optional: Add custom styling for the sidebar and layout here */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  transition: all 0.3s ease;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #fff;
+  text-align: left;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1193d4;
+}
+
+.main-content {
+  padding: 20px;
+  margin-left: 250px;
+}
+</style>
+
+
 <script>
 import DashboardaView from '@/components/barangay/DashboardaView.vue';
 import Assigning from '@/components/barangay/AssigningTanod.vue';
@@ -106,35 +139,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-/* Optional: Add custom styling for the sidebar and layout here */
-#sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  transition: all 0.3s ease;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: transparent;
-  border: 1px solid transparent;
-  color: #fff;
-  text-align: left;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #1193d4;
-}
-
-.main-content {
-  padding: 20px;
-  margin-left: 250px;
-}
-</style>

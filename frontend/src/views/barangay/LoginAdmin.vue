@@ -1,22 +1,40 @@
 <template>
-  <div id="user-identity">
-    <img src="@/assets/logo.png" alt="logo" class="logo" />
-    <div class="container">
+  <div id="user-identity" class="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
+    <div class="container bg-transparent text-light p-4 rounded shadow-lg mb-5" style="max-width: 400px;">
+      <!-- Logo -->
+      <img src="@/assets/logo.png" alt="logo" class="logo mb-4 d-block mx-auto" />
+
       <!-- Display identity -->
-      Welcome Administrator
-      <div v-if="userIdentity" class="form-group">
-        <label for="identity">Your Location: </label>
-        <p>{{ userIdentity }}</p>
+      <h3 class="text-start">Welcome Administrator</h3>
+      <div v-if="userIdentity" class="form-group mb-3">
+        <label for="identity" class="form-label">Your Location: </label>
+        <p class="text-center">{{ userIdentity }}</p>
+      </div>
+      <div v-else>
+        <p class="text-center">Determining your location...plese wait !!</p>
       </div>
 
       <!-- Connect Button -->
-      <button @click="connectToFabric" :disabled="!userIdentity" class="btn btn-primary">Continue</button>
+      <button @click="connectToFabric" :disabled="!userIdentity" class="btn btn-primary w-100">Continue</button>
 
       <!-- Status Message -->
-      <p v-if="connectionStatus" :style="{ color: statusColor }">{{ connectionStatus }}</p>
+      <p v-if="connectionStatus" :style="{ color: statusColor }" class="text-center mt-3">{{ connectionStatus }}</p>
     </div>
   </div>
 </template>
+
+<style scoped>
+#user-identity {
+  background-color: #262529;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  z-index: 10;
+}
+</style>
+
 
 <script>
 export default {
@@ -136,72 +154,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#user-identity {
-  background-color: #262529; /* Light grey background */
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  position: relative; /* Add this */
-}
-
-.logo{
-  position: absolute;
-  top: 50px;
-  left: 100px;
-  width: 100px;
-  height: auto;
-  z-index: 10;
-}
-
-.container {
-  background-color: #FEF9F2; /* White background for the form */
-  padding: 40px;
-  border: 2px solid #ced4da;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px; /* Limit width of the form */
-}
-
-h1 {
-  text-align: center;
-  color: #2c3e50; /* Darker blue for the heading */
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  font-size: 16px;
-  color: #34495e;
-}
-
-p {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  color: #34495e;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 15px;
-  font-family: serif;
-  background-color: #FAF7F3; /* Hyperledger Blue */
-  color: black;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #bbb;
-}
-</style>

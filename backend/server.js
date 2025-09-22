@@ -1,5 +1,5 @@
 import fs from "fs";
-import https from "https";
+//import https from "https";
 import http from "http";
 import express from "express";
 import session from "express-session";
@@ -11,6 +11,8 @@ import bcrypt from "bcrypt";
 import multer from "multer"; // Using multer for file uploads
 import validator from "validator";
 import dotenv from "dotenv"; // This loads the environment variables from your .env file
+//import ngrok from "ngrok";
+//import { exec } from "child_process";
 
 // Initialize dotenv for environment variables
 dotenv.config();
@@ -25,7 +27,7 @@ const app = express();
 // Import custom modules
 import { classifyCrime } from "./crimedetector.js"; // Import the crime classification function
 import { connectToFabric, mysqlConnection } from "./fabricConnector.js"; // Your connection function
-import { uploadFiles } from "./helia.js"; // Import the IPFS upload function
+import { uploadFiles } from "./run.js"; // Import the IPFS upload function
 
 // Your app logic here
 
@@ -44,7 +46,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 60000 * 60, // 1 hour
-    }
+    },
   })
 );
 
@@ -80,7 +82,7 @@ let uploadedFiles = {};
 app.post("/upload", upload.array("file[]"), (req, res) => {
   // Initialize an array to store the URLs of uploaded files
   let fileUrls = [];
-  
+
   // Iterate through the uploaded files
   req.files.forEach((file) => {
     const fileUrl = `http://localhost:3000/uploads/${
@@ -100,7 +102,7 @@ app.post("/upload", upload.array("file[]"), (req, res) => {
   });
 
   // Send the file URLs and file names back to the frontend
-  res.send({ fileUrls, fileNames: req.files.map(file => file.filename) });
+  res.send({ fileUrls, fileNames: req.files.map((file) => file.filename) });
 });
 
 app.delete("/delete-file/:fileName", (req, res) => {
@@ -307,13 +309,17 @@ app.post("/report", uploads.array("file[]"), async (req, res) => {
     // Classify the crime based on the description (replace with your actual classification logic)
     const crimeCategory = classifyCrime({ description });
 
-    // Handle multiple file uploads and get their links (assuming uploadFiles returns an array of URLs or CIDs)
-    let mediaLinks = await uploadFiles(
-      req.files.map((file) => file.path) // Get file paths from req.files
-    );
+    // Handle multiple file uploads and get their links (assuming uploadFiles returns an array of URLs)
+    let mediaLinks = await uploadFiles(req.files.map((file) => file.path));
+
     console.log("Media Links:", mediaLinks); // Debug: Check uploaded file links
-    // Join the array of CIDs into a single comma-separated string
-    const mediaLink = mediaLinks.length > 0 ? mediaLinks.join(",") : null;
+
+    // Create the clickable IPFS links and store them in `mediaLinks` array
+    const clickableLinks = mediaLinks.map((link) => {
+      return `https://gateway.pinata.cloud/ipfs/${link}`;
+    });
+    const mediaLink =
+      clickableLinks.length > 0 ? clickableLinks.join(",") : null;
 
     // Log the final mediaLink to store (as a single string)
     console.log("Final Media Link to store:", mediaLink);
@@ -331,7 +337,7 @@ app.post("/report", uploads.array("file[]"), async (req, res) => {
           anonyname,
           identity,
           crimeCategory,
-          mediaLink
+          mediaLink,
         ]
       );
 
@@ -680,8 +686,8 @@ app.get("/barangay", (req, res) => {
   res.sendFile(path.join(__dirname, "UI", "dist", "index.html"));
 });
 
-http.createServer(app).listen(3000, () => {
-  console.log("HTTP Server running on http://localhost:3000");
+http.createServer(app).listen(3000, async () => {
+  console.log("http Server running on http://localhost:3000");
 });
 
 // HTTPS Server

@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import TanodLogin from '@/views/barangay/Tanod/TanodLogin.vue'
 import TanodInterface from '@/views/barangay/Tanod/TanodInterface.vue'
 import BarangayView from '@/views/barangay/BarangayView.vue'
@@ -6,11 +6,11 @@ import StartedViews from '@/views/user/StartedViews.vue'
 import LoginAdmin from '@/views/barangay/LoginAdmin.vue'
 import UnVerified_Verified from '@/components/barangay/UnVerified_Verified.vue'
 import AssigningTanod from '@/components/barangay/AssigningTanod.vue'
-import ProtoReporting from '@/views/user/ProtoReporting.vue'
 import BarangayProto from '@/views/barangay/BarangayProto.vue'
+import CitenzenProt from '@/views/user/ProtoReporting.vue'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/assigning-tanod', name: 'assigning-tanod', component: AssigningTanod },
     { path: '/unverified-verified', name: 'unverified-verified', component: UnVerified_Verified },
@@ -18,8 +18,9 @@ const router = createRouter({
     { path: '/tanod-interface', name: 'tanod-interface', component: TanodInterface },
     { path: '/barangay-view', name: 'barangay-view', component: BarangayView },
     { path: '/', name: 'started', component: StartedViews },
+    {path:'/proto-reporting', name:'proto-reporting', component:CitenzenProt},
     { path: '/login-admin', name: 'login-admin', component: LoginAdmin },
-    { path: '/proto-reporting', name: 'proto-reporting', component: ProtoReporting },
+    { path: '/login-admin', name: 'login-admin', component: LoginAdmin },
     { path: '/reports-list', name: 'reports-list', component: BarangayProto },
   ],
 })

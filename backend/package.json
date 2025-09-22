@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@helia/dag-json": "^4.1.0",
+    "@pinata/sdk": "^2.1.0",
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "compromise": "^14.14.4",
@@ -27,6 +28,7 @@
     "langdetect": "^0.2.1",
     "multer": "^2.0.2",
     "mysql2": "^3.14.3",
+    "ngrok": "^5.0.0-beta.2",
     "path": "^0.12.7",
     "rimraf": "^4.4.1",
     "validator": "^13.15.15"

@@ -42,13 +42,13 @@
         role="tabpanel"
         aria-labelledby="verified-tab"
       >
-        <div class="card bg-secondary text-light border-0 rounded">
+        <div class="card bg-transparent shadow-lg rounded-3 p-3 mb-5 text-light border-0 rounded">
           <div class="card-body">
             <h4 class="card-title">Verified Reports</h4>
 
             <!-- Check if there are any verified reports -->
             <div v-if="verifiedReports.length > 0">
-              <table class="table table-bordered table-striped text-light">
+              <table class="table table-bordered table-dark text-light">
                 <thead class="bg-dark">
                   <tr>
                     <th>Report ID</th>
@@ -83,13 +83,13 @@
         role="tabpanel"
         aria-labelledby="unverified-tab"
       >
-        <div class="card bg-secondary text-light border-0 rounded">
+        <div class="card bg-transparent shadow-lg rounded-3 p-3 mb-5 text-light border-0 rounded">
           <div class="card-body">
             <h4 class="card-title">Unverified Reports</h4>
 
             <!-- Check if there are any unverified reports -->
             <div v-if="unverifiedReports.length > 0">
-              <table class="table table-bordered table-striped text-light">
+              <table class="table table-bordered table-dark text-light">
                 <thead class="bg-dark">
                   <tr>
                     <th>Report ID</th>
