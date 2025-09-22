@@ -355,7 +355,7 @@ export default {
     async fetchUserIdentity() {
       try {
         const response = await axios.get("https://servern.loophole.site/get-identity-session", { withCredentials: true });
-        this.userIdentity = response.data.userIdentity || '';
+        this.userIdentity = response.data.userIdentity || 'Mahay';
         console.log("Fetched user identity:", this.userIdentity);
         if (this.userIdentity) {
           this.fetchReports(this.userIdentity);
