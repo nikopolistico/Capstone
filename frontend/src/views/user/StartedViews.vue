@@ -1,156 +1,407 @@
 <template>
-  <div id="user-identity" class="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
-    <div class="container bg-transparent text-light p-4 rounded shadow-lg mb-5" style="max-width: 400px;">
-      <!-- Logo -->
-      <img src="@/assets/logo.png" alt="logo" class="logo mb-4 d-block mx-auto" />
+  <div class="container-fluid bg-dark text-light min-vh-100">
+    <!-- User Guide Popup -->
+    <UserGuide v-if="isVisible" @close-guide="closeGuidePopup" />
 
-      <!-- Display identity -->
-      <h3 class="text-start">Welcome Users</h3>
-      <div v-if="userIdentity" class="form-group mb-3">
-        <label for="identity" class="form-label">Your Location: </label>
-        <p class="text-center">{{ userIdentity }}</p>
+    <!-- Header Section -->
+    <header class="sticky-top bg-dark bg-opacity-75 border-bottom">
+      <div class="d-flex justify-content-between align-items-center p-3">
+        <h1 class="text-primary fw-bold mb-0">BlockWatch</h1>
+        <nav class="d-none d-md-flex">
+          <a href="#" :class="{'text-secondary': activeTab !== 'report', 'text-primary': activeTab === 'report'}" @click="toggleTab('report')" class="px-3 nav-link">
+            <i class="bi bi-pencil-square"></i> Write a Report
+          </a>
+          <a href="#" :class="{'text-secondary': activeTab !== 'track', 'text-primary': activeTab === 'track'}" @click="toggleTab('track')" class="px-3 nav-link">
+            <i class="bi bi-file-earmark-text"></i> View Reports
+          </a>
+          <a href="#" :class="{'text-secondary': activeTab !== 'guide', 'text-primary': activeTab === 'guide'}" @click="toggleTab('guide')" class="px-3 nav-link">
+            <i class="bi bi-question-circle"></i> User Guide
+          </a>
+        </nav>
+        <!-- Mobile Navigation -->
+        <nav class="d-md-none">
+          <a href="#" :class="{'text-secondary': activeTab !== 'report', 'text-primary': activeTab === 'report'}" @click="toggleTab('report')" class="px-3">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+          <a href="#" :class="{'text-secondary': activeTab !== 'track', 'text-primary': activeTab === 'track'}" @click="toggleTab('track')" class="px-3">
+            <i class="bi bi-file-earmark-text"></i>
+          </a>
+          <a href="#" :class="{'text-secondary': activeTab !== 'guide', 'text-primary': activeTab === 'guide'}" @click="toggleTab('guide')" class="px-3">
+            <i class="bi bi-question-circle"></i>
+          </a>
+        </nav>
       </div>
-      <div v-else>
-        <p class="text-center">Determining your location...plese wait !!</p>
+    </header>
+
+    <!-- Tabs Navigation (Visible on Desktop) -->
+    <div class="mt-3 d-none d-md-flex">
+      <div class="d-flex gap-3 justify-content-start mx-auto" style="width: 80%;">
+        <button class="btn btn-outline-secondary w-20" :class="{'active': activeTab === 'report'}" @click="toggleTab('report')">
+          Report an Activity
+        </button>
+        <button class="btn btn-outline-secondary w-20" :class="{'active': activeTab === 'track'}" @click="toggleTab('track')">
+          Track a Report
+        </button>
+        <button class="btn btn-outline-secondary w-20" :class="{'active': activeTab === 'guide'}" @click="toggleTab('guide')">
+          User Guide
+        </button>
+      </div>
+    </div>
+
+    <!-- Report Activity Content -->
+    <div v-if="activeTab === 'report'" class="tab-content mt-3 mx-auto" style="width: 80%;">
+      <div class="bg-dark text-light p-4 rounded-3 mb-4">
+        <h4>File a New Incident Report</h4>
+        <p>Your report will be added to the decentralized ledger. Please provide accurate information.</p>
+
+        <div class="mb-3">
+          <label for="anonymousName" class="form-label">Your Anonymous Name</label>
+          <input v-model="anonymousName" id="anonymousName" type="text" class="form-control custom-input" placeholder="e.g. Witness101" />
+        </div>
+
+        <div class="mb-3">
+          <label for="incidentDescription" class="form-label">Incident Description</label>
+          <textarea v-model="description" id="incidentDescription" rows="4" class="form-control custom-input" placeholder="Describe what happened..."></textarea>
+        </div>
+
+        <!-- File Upload -->
+        <div class="mt-3">
+          <label for="file-upload" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Upload an Image or Video
+          </label>
+          <input id="file-upload" type="file" name="file[]" @change="handleFileSelection" multiple class="d-none" />
+          <p v-if="uploadStatus">{{ uploadStatus }}</p>
+
+          <!-- Preview Images or Videos -->
+            <div v-if="previewUrls.length" class="mt-3">
+              <div class="d-flex flex-wrap">
+                <div v-for="(url, index) in previewUrls" :key="index" class="me-3 mb-3 position-relative" style="width: 80px; height: 80px;">
+                  <!-- Image Preview -->
+                  <img v-if="isImage(url)" :src="url" alt="Preview" class="preview-img" />
+
+                  <!-- Video Preview -->
+                  <video v-else-if="isVideo(url)" :src="url" controls class="preview-img"></video>
+
+                  <!-- Remove Preview -->
+                  <i @click="removePreview(index)" class="bi bi-x-octagon cursor-pointer position-absolute top-0 end-0 text-black"></i>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-primary" @click="submitReport">Submit Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Track Report Content -->
+  <div v-if="activeTab === 'track'" class="tab-content mt-3 mx-auto" style="width: 80%;">
+  <div class="bg-dark text-light p-4 rounded-3 mb-4">
+    <h3>📋 View Tracking Reports</h3>
+    <input v-model="searchName" type="text" class="form-control custom-input my-2" placeholder="Search by anonymous name" />
+
+    <div class="mt-3">
+      <!-- Report Status Filters -->
+      <div class="d-flex gap-2 mb-3">
+        <span class="badge bg-primary">unverified</span>
+        <span class="badge bg-secondary">in progress</span>
+        <span class="badge bg-success">verified</span>
       </div>
 
-      <!-- Connect Button -->
-      <button @click="connectToFabric" :disabled="!userIdentity" class="btn btn-primary w-100">Continue</button>
+      <!-- Cards for Each Report -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        <div
+          v-for="(report, index) in filteredReports"
+          :key="index"
+          class="col"
+        >
+          <div class="card bg-dark text-light shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Alias: {{ report.name }}</h5>
+               <p class="card-text">
+                <strong>Reported Incidents: </strong>
+                <span> {{ report.description }}</span>
+               </p>
+              <p class="card-text">
+                <strong>Report Status: </strong>
+                <span :class="getStatusClass(report.status)">{{ report.status }}</span>
+              </p>
+             <div class="card-text">
+              <p>{{ report.message ? report.message : "No message provided" }}</p>
+            </div>
+              <!-- Message Section -->
+              <div class="d-flex gap-2 mt-3">
+                <i class="bi bi-chat-dots"></i>
+                <input
+                  v-model="report.message"
+                  placeholder="Message to follow up"
+                  class="form-control d-inline-block w-75 bg-dark text-light p-2"
+                />
+                <i class="bi bi-send pt-2 cursor ms-auto" @click="sendMessage(report)">send</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Status Message -->
-      <p v-if="connectionStatus" :style="{ color: statusColor }" class="text-center mt-3">{{ connectionStatus }}</p>
+      <!-- No Data Message -->
+      <div v-if="!filteredReports.length" class="text-center text-muted mt-4">
+        No reports found matching your search.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- User Guide Content -->
+    <div v-if="activeTab === 'guide'" class="tab-content mt-3 mx-auto" style="width: 80%;">
+      <div class="bg-dark text-light p-4 rounded-3 text-center">
+        <button class="btn btn-info" @click="showGuide">Watch Guide</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-#user-identity {
-  background-color: #262529;
+/* Custom styles for the inputs */
+.custom-input {
+  background-color: #202223;
+  border: 1px solid white;
+  color: white;
 }
 
-.logo {
-  width: 100px;
-  height: auto;
-  z-index: 10;
+.custom-input::placeholder {
+  color: white;
+}
+
+.custom-input:focus {
+  background-color: #313537;
+  border: 1px solid #1193d4;
+  outline: none;
+}
+
+.cursor{
+  cursor: pointer;
+}
+
+/* Remove underlines from the navigation links */
+.nav-link {
+  text-decoration: none;
+}
+
+.preview-img {
+  width: 100%;  /* Ensures the image/video fits the container */
+  height: 100%;  /* Ensures the image/video fits the container */
+  object-fit: cover;  /* Maintains the aspect ratio without distortion */
+  border: 1px solid white;  /* Optional: Adds a border around the preview */
+  border-radius: 4px;  /* Optional: Rounds the corners */
+}
+
+.preview-img:hover {
+  opacity: 0.8;  /* Optional: Add hover effect */
 }
 </style>
 
-
 <script>
+import axios from 'axios';
+import UserGuide from '@/components/user/UserGuide.vue';
+
 export default {
+  components: {
+    UserGuide,
+  },
   data() {
     return {
-      userIdentity: "", // To store the fetched identity
-      connectionStatus: "", // To store connection status message
-      statusColor: "black", // Status message color
-      isLoading: false, // To show a loading spinner or message
+      anonymousName: '',
+      description: '',
+      reports: [],
+      searchName: '',
+      uploadStatus: '',
+      isVisible: false,
+      activeTab: 'guide',
+      userIdentity: '',
+      previewUrls: [], // Array to store URLs of preview images or videos
+      uploadedFileNames: [], // Store the file names for removal
     };
   },
+  computed: {
+    filteredReports() {
+      if (!this.searchName.trim()) return this.reports;
+      return this.reports.filter(r => r.name.toLowerCase().includes(this.searchName.toLowerCase()));
+    },
+  },
   methods: {
-    // Get user's coordinates and determine identity dynamically
-    getCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-            this.reverseGeocode(latitude, longitude);
-          },
-          (error) => {
-            console.error("Error getting location: ", error);
-            this.connectionStatus = `❌ Error: ${error.message}`;
-            this.statusColor = "red";
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0,
-          }
-        );
+    toggleTab(tab) {
+      if (this.activeTab === tab) {
+        this.activeTab = '';
       } else {
-        this.connectionStatus = "❌ Geolocation is not supported by this browser.";
-        this.statusColor = "red";
+        this.activeTab = tab;
       }
     },
+    getStatusClass(status) {
+      switch (status) {
+        case 'unverified':
+          return 'badge bg-primary';
+        case 'in progress':
+          return 'badge bg-secondary';
+        case 'verified':
+          return 'badge bg-success';
+        default:
+          return 'badge bg-light text-dark';
+      }
+    },
+    showGuide() {
+      this.isVisible = true;
+    },
+    closeGuidePopup() {
+      this.isVisible = false;
+    },
+    handleFileSelection(event) {
+      const files = event.target.files;  // Get all selected files
+      if (!files.length) return;  // No files selected
 
-    // Reverse geocode the coordinates if no known location matches
-    reverseGeocode(latitude, longitude) {
-      const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=40ab30f288d142e9bc097f4b490d76f9`;
+      // Reset previous preview URLs and file names
+      this.previewUrls = [];
+      this.uploadedFileNames = [];
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.features && data.features.length > 0) {
-            const displayName = data.features[0].properties.formatted; // Get the full address
+      // Create FormData for uploading files
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append('file[]', file);  // Append each file to FormData
+      });
 
-            if (displayName.includes("Iligan")) {
-              this.userIdentity = "Mahay"; // Set identity to "Mahay"
-              this.connectionStatus = "Identity: Brgy. Mahay";
-              this.statusColor = "green";
-            } else if (displayName.includes("Buenavista")) {
-              this.userIdentity = "Buenavista"; // Set identity to "Buenavista"
-              this.connectionStatus = "Identity: Brgy. Buenavista";
-              this.statusColor = "green";
-            } else {
-              this.userIdentity = displayName; // Use the full address if neither is found
-              this.connectionStatus = "Identity determined from geocoding!";
-              this.statusColor = "green";
-            }
-          } else {
-            this.userIdentity = "Address not found"; // Fallback if no address found
-            this.connectionStatus = "❌ Address not found";
-            this.statusColor = "red";
-          }
-          this.isLoading = false; // Stop loading
+      // Send the files to the server
+      axios.post('https://servern.loophole.site/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((response) => {
+        // Assuming the response contains the URLs of the uploaded files
+        this.uploadedFileNames = response.data.fileNames; // Store file names for potential removal
+        this.previewUrls = response.data.fileUrls;  // Media links returned by the backend
+        this.uploadStatus = 'Files uploaded successfully';
+      })
+      .catch((error) => {
+        this.uploadStatus = 'Error uploading files.';
+        console.error(error);
+      });
+    },
+
+    // Remove file preview
+    removePreview(index) {
+      const fileName = this.uploadedFileNames[index];
+
+      // Send a request to delete the file from the server
+      axios.delete(`https://servern.loophole.site/delete-file/${fileName}`)
+        .then(() => {
+          // Remove the preview URL and file name from the arrays
+          this.previewUrls.splice(index, 1);
+          this.uploadedFileNames.splice(index, 1);
+          this.uploadStatus = '';
         })
-        .catch((error) => {
-          console.error("Error fetching location:", error);
-          this.connectionStatus = `❌ Error: ${error.message}`;
-          this.statusColor = "red";
+        .catch(() => {
+          this.uploadStatus = 'Error removing file.';
         });
     },
 
-    // Handle connection to the backend (Fabric network or other)
-    async connectToFabric() {
-      if (!this.userIdentity || this.userIdentity === "") {
-        this.connectionStatus = "❌ User identity is required.";
-        this.statusColor = "red";
+    submitReport() {
+      if (!this.anonymousName.trim()) {
+        alert('Please enter your anonymous name.');
+        return;
+      }
+
+      if (!this.description.trim()) {
+        alert('Please enter a crime description.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('anonyname', this.anonymousName);
+      formData.append('description', this.description);
+      formData.append('userIdentity', this.userIdentity);
+
+      // Add file(s) to formData
+      const fileInput = document.getElementById('file-upload');
+      const files = fileInput.files;
+      if (files.length > 0) {
+        Array.from(files).forEach((file) => {
+          formData.append('file[]', file);  // Append each file
+        });
+      }
+
+      // Show upload status
+      this.uploadStatus = 'Uploading...';
+
+      // Send the form data to the server
+      axios.post('https://servern.loophole.site/report', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then(() => {
+        alert('Report submitted successfully!');
+      })
+      .catch((error) => {
+        this.uploadStatus = 'Error uploading file.';
+        console.error(error);
+      });
+
+      // Reset form fields after submission
+      this.anonymousName = '';
+      this.description = '';
+      this.previewUrls = [];
+      this.uploadedFileNames = [];
+    },
+
+    async fetchUserIdentity() {
+      try {
+        const response = await axios.get("https://servern.loophole.site/get-identity-session", { withCredentials: true });
+        this.userIdentity = response.data.userIdentity || '';
+        console.log("Fetched user identity:", this.userIdentity);
+        if (this.userIdentity) {
+          this.fetchReports(this.userIdentity);
+        }
+      } catch (error) {
+        console.error("Error fetching user identity:", error);
+      }
+    },
+
+    async fetchReports(userIdentity) {
+      if (!userIdentity) {
+        console.warn("User identity is not set. Cannot fetch reports.");
         return;
       }
 
       try {
-        this.connectionStatus = "Connecting...";
-        this.statusColor = "black";
-
-        const response = await fetch("https://servern.loophole.site/connect", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userIdentity: this.userIdentity }),
+        const response = await axios.get(`https://servern.loophole.site/reports?userIdentity=${userIdentity}`, {
+          withCredentials: true,
         });
-
-        if (response.ok) {
-          const data = await response.json();
-          this.connectionStatus = `✅ ${data.message}`;
-          this.statusColor = "green";
-
-          // Redirect to the report page
-          this.$router.push({ path: "/proto-reporting", query: { userIdentity: this.userIdentity } });
-        } else {
-          const errorData = await response.json();
-          throw new Error(errorData.message);
-        }
+        this.reports = response.data || [];
       } catch (error) {
-        this.connectionStatus = `❌ Error: ${error.message}`;
-        this.statusColor = "red";
+        console.error("Error fetching reports:", error);
       }
+    },
+
+    sendMessage(report) {
+      console.log('Sending message for report:', report);
+    },
+
+    isImage(url) {
+      return url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg');
+    },
+
+    isVideo(url) {
+      return url.endsWith('.mp4') || url.endsWith('.webm');
     },
   },
   mounted() {
-    // Automatically fetch location when the component is mounted
-    this.getCurrentLocation();
+    this.fetchUserIdentity();
+  },
+  watch: {
+    userIdentity(newVal) {
+      if (newVal) {
+        this.fetchReports(newVal);
+      }
+    },
   },
 };
 </script>
