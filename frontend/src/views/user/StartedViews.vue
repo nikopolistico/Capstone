@@ -83,7 +83,7 @@ export default {
           if (data.features && data.features.length > 0) {
             const displayName = data.features[0].properties.formatted; // Get the full address
 
-            if (displayName.includes("Butuan")) {
+            if (displayName.includes("Iligan")) {
               this.userIdentity = "Mahay"; // Set identity to "Mahay"
               this.connectionStatus = "Identity: Brgy. Mahay";
               this.statusColor = "green";
