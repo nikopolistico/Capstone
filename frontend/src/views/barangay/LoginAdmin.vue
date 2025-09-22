@@ -122,7 +122,7 @@ export default {
         this.connectionStatus = "Connecting...";
         this.statusColor = "black";
 
-        const response = await fetch("http://localhost:3000/connect", {
+        const response = await fetch("https://servern.loophole.site/connect", {
           method: "POST",
           credentials: "include",
           headers: {
