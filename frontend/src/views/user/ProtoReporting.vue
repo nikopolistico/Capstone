@@ -372,7 +372,7 @@ export default {
       }
 
       try {
-        const response = await axios.get(`http://localhost:3000/reports?userIdentity=${userIdentity}`, {
+        const response = await axios.get(`https://servern.loophole.site/reports?userIdentity=${userIdentity}`, {
           withCredentials: true,
         });
         this.reports = response.data || [];

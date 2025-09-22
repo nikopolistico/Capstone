@@ -33,7 +33,7 @@ import { uploadFiles } from "./run.js"; // Import the IPFS upload function
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Specify your frontend origin here
+    origin: ["http://localhost:5173", "https://capstone-alpha-gilt.vercel.app"], // Specify your frontend origins here
     credentials: true, // Allow cookies and session credentials
   })
 );
