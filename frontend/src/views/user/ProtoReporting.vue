@@ -361,7 +361,7 @@ export default {
           this.fetchReports(this.userIdentity);
         }
       } catch (error) {
-        console.error("Error fetching user identity:", error);
+        console.error("Error fetching user identity:", error.response ? error.response.data : error.message);
       }
     },
 
